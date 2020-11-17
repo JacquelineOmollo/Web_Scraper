@@ -1,0 +1,169 @@
+function openCity(e, a) {
+	var t, c, o;
+	for (c = document.getElementsByClassName("tabcontent"), t = 0; t < c.length; t++) c[t].style.display = "none";
+	for (o = document.getElementsByClassName("tablinks"), t = 0; t < o.length; t++) o[t].className = o[t].className.replace(" active", "");
+	document.getElementById(a).style.display = "block", e.currentTarget.className += " active"
+}
+
+function checkUrl(e) {
+	if (e) {
+		var a = $("#url_id_" + e).attr("href"),
+			t = $("#url_id_" + e).text(),
+			c = window.location.href,
+			o = window.location.pathname;
+		$.ajax({
+			url: "/url/redirect",
+			method: "GET",
+			data: {
+				url: a,
+				retailer: t,
+				url_id: e,
+				page_url: c,
+				url_path: o
+			},
+			success: function (e) {}
+		})
+	}
+}
+
+function checkDeskAdUrl(e) {
+	if (e) {
+		var a = $("#desk_ad_url_id_" + e).attr("href"),
+			t = $("#desk_ad_url_id_" + e).attr("data-retailer"),
+			c = window.location.href,
+			o = window.location.pathname;
+		$.ajax({
+			url: "/url/desk-ad-redirect",
+			method: "get",
+			data: {
+				url: a,
+				retailer: t,
+				url_id: e,
+				page_url: c,
+				url_path: o
+			},
+			success: function (e) {}
+		})
+	}
+}
+
+function checkMobAdUrl(e) {
+	if (e) {
+		var a = $("#mob_ad_url_id_" + e).attr("href"),
+			t = $("#mob_ad_url_id_" + e).attr("data-retailer"),
+			c = window.location.href,
+			o = window.location.pathname;
+		$.ajax({
+			url: "/url/mob-ad-redirect",
+			method: "GET",
+			data: {
+				url: a,
+				retailer: t,
+				url_id: e,
+				page_url: c,
+				url_path: o
+			},
+			success: function (e) {}
+		})
+	}
+}
+$(document).ready(function () {
+	
+	$(".caliberSearchForm").submit(function(e) {
+		e.preventDefault();
+		return false;
+	});
+	
+	//header search mobile start
+		$(".still-question").click(function(){
+			$(".contact-form").toggle(1000);
+		});
+		$('input[type="radio"]').click(function() {
+			var inputValue = $(this).attr("value");
+			var targetBox = $("." + inputValue);
+			$(".box").not(targetBox).hide();
+			$(targetBox).show();
+		});
+		
+		$(".mobile-search").click(function() {
+			$(".search-box.phone").toggle();
+		});	
+		
+		$("#show").click(function() {
+			$(".footer-menu").toggle();
+		});
+		
+		$("#hide").click(function() {
+			$(".footer-menu").hide();
+		});
+	//header search mobile end
+	
+	setInterval(function () {
+		$("#myModal1").modal("show"), $("#myModal1").modal({
+			backdrop: "static",
+			keyboard: !1
+		})
+	}, 36e4), $("#caliberSearchbBox").keyup(function (e) {
+		var a = $(this).val(),
+			t = e.keyCode || e.which;
+		if ("" == a || 13 == t) return e.preventDefault(), !1;
+		var c = $('input[name="_token"]').val();
+		$.ajax({
+			url: "/autocomplete/fetch",
+			method: "Get",
+			data: {
+				query: a,
+				_token: c
+			},
+			success: function (e) {
+				$("#searchResults").fadeIn(), $("#searchResults").html(e)
+			}
+		})
+	}), $(document).on("click", function () {
+		$("#searchUpcResults").fadeOut()
+	}), $(document).on("click", function () {
+		$("#upcResults").fadeOut()
+	}), $(document).on("click", "span.addToFlaged", function () {
+		var e = $(this).attr("data-id");
+		$("#flag_product_id").val(""), $("#flag_product_id").val(e)
+	}), $(document).on("click", "button.submitFlagProductForm", function () {
+		var e = $("#flag_product_id").val(),
+			a = $("#message").val();
+		$.ajax({
+			type: "POST",
+			url: "/flaged-product",
+			headers: {
+				"X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+			},
+			async: !1,
+			dataType: "json",
+			data: {
+				product_id: e,
+				msg: a
+			},
+			success: function (e) {
+				1 == e.sucess ? ($("#message").val(""), $("#flagMessage").html(""), $("#flagMessage").append(e.message)) : ($("#flagMessage").html(""), $("#flagMessage").append(e.message))
+			}
+		})
+	}), $(document).on("click", ".caliberSearchUrl", function () {
+		$("#caliberSearchbBox").val($(this).text()), $("#searchResults").fadeOut(), $("#caliberSearchForm").submit()
+	}), $(document).on("click", function () {
+		$("#searchResults").fadeOut()
+	}), $(document).on("click", function () {
+		$("#searchCaliberFilter").fadeOut()
+	}), $("#advance-options").click(function () {
+		$("#show-hide-box").toggle()
+	}), $("#advance-options1").click(function () {
+		$("#show-hide-box1").toggle()
+	}), $("#advance-options2").click(function () {
+		$("#show-hide-box2").toggle()
+	}), $("#advance-options3").click(function () {
+		$("#show-hide-box3").toggle()
+	}), $('input[type="radio"]').click(function () {
+		var e = $(this).attr("value"),
+			a = $("." + e);
+		$(".box").not(a).hide(), $(a).show()
+	}), $(".bulkCheapAmmo-certified-retailers").click(function () {
+		$("#sidebar").toggle()
+	})
+});
