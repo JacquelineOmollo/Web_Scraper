@@ -13,12 +13,12 @@ site = requests.get(web_data, headers=headers)
 soup = BeautifulSoup(site.content, 'html.parser')
 
 
-# round_title = BeautifulSoup("<span class='round'> 50 Rds </span>", "html.parser")
-# round_title.span['class']
+round_title = soup.find("span", {"class": "round"}).get_text()
 
-# caliber = get
-#
-#
-# print(round_title)
-print(soup.prettify())
+
+caliber = soup.findAll("div", {"class": "caliber-name"})
+
+
+print(round_title, caliber)
+# print(soup.prettify())
 
